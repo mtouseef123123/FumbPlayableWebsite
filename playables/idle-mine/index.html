@@ -72,11 +72,15 @@
 
         .qr-sidebar img {
             width: 180px;
-            height: 180px;
+            height: auto;
+            max-height: 180px;
+            max-width: 180px;
+            object-fit: contain;
             border-radius: 12px;
             background: white;
             padding: 8px;
             margin-bottom: 12px;
+            display: block;
         }
 
         .qr-sidebar h3 {
@@ -217,10 +221,25 @@
                 frame.style.borderRadius = '0';
                 frame.style.margin = '0';
 
-                // Try fullscreen
-                setTimeout(() => {
-                    document.documentElement.requestFullscreen?.().catch(() => {});
-                }, 500);
+                // Improved mobile fullscreen handling (iOS/Android safe attempt)
+                const tryFullscreen = () => {
+                    const el = document.documentElement;
+                    if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+                    else if ((el).webkitRequestFullscreen) (el).webkitRequestFullscreen();
+                };
+
+                // Try immediately
+                setTimeout(tryFullscreen, 500);
+
+                // Fallback: trigger on first user interaction (important for iOS Safari)
+                const gestureHandler = () => {
+                    tryFullscreen();
+                    window.removeEventListener('touchstart', gestureHandler);
+                    window.removeEventListener('click', gestureHandler);
+                };
+
+                window.addEventListener('touchstart', gestureHandler, { once: true });
+                window.addEventListener('click', gestureHandler, { once: true });
             } else {
                 // Desktop: Start in portrait with nice phone frame
                 setOrientation('portrait');
