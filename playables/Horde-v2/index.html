@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idle Mine • Playable</title>
+    <style>
+        body {
+            margin: 0;
+            background: #0f0f11;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #e5e7eb;
+        }
+
+        #control-bar {
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+            background: #18181b;
+            border-bottom: 1px solid #27251f;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            font-size: 13px;
+        }
+
+        .main-container {
+            display: flex;
+            gap: 24px;
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Playable Area - Centered */
+        .playable-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        #game-frame {
+            width: 100%;
+            max-width: 380px;
+            height: 640px;
+            border: 12px solid #27251f;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.6);
+            background: #000;
+            transition: all 0.3s ease;
+        }
+
+        .landscape {
+            max-width: 640px;
+            height: 360px;
+            border-radius: 24px;
+        }
+
+        /* QR Code Sidebar */
+        .qr-sidebar {
+            width: 220px;
+            background: #18181b;
+            border: 1px solid #27251f;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .qr-sidebar img {
+            width: 180px;
+            height: auto;
+            max-height: 180px;
+            max-width: 180px;
+            object-fit: contain;
+            border-radius: 12px;
+            background: white;
+            padding: 8px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .qr-sidebar h3 {
+            margin: 0 0 8px 0;
+            font-size: 15px;
+            color: #f3e8ff;
+        }
+
+        .qr-sidebar p {
+            margin: 0;
+            font-size: 12px;
+            color: #9ca3af;
+            line-height: 1.4;
+        }
+
+        .scan-text {
+            margin-top: 12px;
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        @media (max-width: 900px) {
+            .main-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .qr-sidebar {
+                width: 100%;
+                max-width: 300px;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Control Bar -->
+    <div id="control-bar">
+        <div style="display:flex; align-items:center; gap:10px; font-weight:600;">
+            <span id="game-title">Idle Mine</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+            <!-- Orientation -->
+            <div style="display:flex; background:#27251f; border-radius:9999px; padding:2px; border:1px solid #3f3f46;">
+                <button onclick="setOrientation('portrait')" 
+                        style="padding:5px 14px; border-radius:9999px; border:none; background:#3f3f46; color:white; cursor:pointer; font-size:11px;">
+                    📱 Portrait
+                </button>
+                <button onclick="setOrientation('landscape')" 
+                        style="padding:5px 14px; border-radius:9999px; border:none; background:transparent; color:#a1a1aa; cursor:pointer; font-size:11px;">
+                    📱 Landscape
+                </button>
+            </div>
+
+            <button onclick="toggleFullscreen()" 
+                    style="padding:6px 12px; background:#27251f; border:1px solid #3f3f46; border-radius:9999px; color:#a1a1aa; cursor:pointer; font-size:11px;">
+                ⛶ Fullscreen
+            </button>
+
+            <button onclick="closePlayable()" 
+                    style="padding:6px 12px; background:#450a0a; border:1px solid #7f1d1d; border-radius:9999px; color:#fda4af; cursor:pointer; font-size:11px;">
+                ✕ Close
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+
+        <!-- Playable (Centered) -->
+        <div class="playable-wrapper">
+            <iframe id="game-frame" src="playable.html" frameborder="0"></iframe>
+        </div>
+
+        <!-- QR Code Sidebar -->
+        <div class="qr-sidebar">
+            <h3>Scan to Play</h3>
+            
+            <!-- QR Code Image -->
+            <!-- Place your QR code image as "qr.png" in this same folder -->
+            <img id="qr-image" src="qr.png" alt="QR Code" 
+                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27180%27 height=%27180%27%3E%3Crect width=%27180%27 height=%27180%27 fill=%27%23f3f4f6%27/%3E%3Ctext x=%2290%27 y=%2295%27 font-size=%2714%27 fill=%27%239ca3af%27 text-anchor=%27middle%27%3ENo QR yet%3C/text%3E%3C/svg%27'; this.style.padding='20px';">
+
+            <p>Scan this QR code with your phone camera to play on mobile in fullscreen.</p>
+            
+            <div class="scan-text">
+                Works best on real device
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const frame = document.getElementById('game-frame');
+
+        function setOrientation(mode) {
+            if (mode === 'portrait') {
+                frame.style.maxWidth = '380px';
+                frame.style.height = '640px';
+                frame.style.borderRadius = '32px';
+                frame.classList.remove('landscape');
+            } else {
+                frame.style.maxWidth = '640px';
+                frame.style.height = '360px';
+                frame.style.borderRadius = '24px';
+                frame.classList.add('landscape');
+            }
+        }
+
+        function toggleFullscreen() {
+            const elem = document.documentElement;
+            if (!document.fullscreenElement) {
+                elem.requestFullscreen?.();
+            } else {
+                document.exitFullscreen?.();
+            }
+        }
+
+        function closePlayable() {
+            if (confirm('Close this playable?')) {
+                if (window.mraid && typeof mraid.close === 'function') {
+                    mraid.close();
+                } else {
+                    window.close();
+                }
+            }
+        }
+
+        function init() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth <= 768;
+
+            if (isMobile) {
+                // Mobile: Full width, no frame
+                frame.style.maxWidth = '100%';
+                frame.style.height = 'calc(100vh - 52px)';
+                frame.style.border = 'none';
+                frame.style.borderRadius = '0';
+                frame.style.margin = '0';
+
+                // Improved mobile fullscreen handling (iOS/Android safe attempt)
+                const tryFullscreen = () => {
+                    const el = document.documentElement;
+                    if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+                    else if ((el).webkitRequestFullscreen) (el).webkitRequestFullscreen();
+                };
+
+                // Try immediately
+                setTimeout(tryFullscreen, 500);
+
+                // Fallback: trigger on first user interaction (important for iOS Safari)
+                const gestureHandler = () => {
+                    tryFullscreen();
+                    window.removeEventListener('touchstart', gestureHandler);
+                    window.removeEventListener('click', gestureHandler);
+                };
+
+                window.addEventListener('touchstart', gestureHandler, { once: true });
+                window.addEventListener('click', gestureHandler, { once: true });
+            } else {
+                // Desktop: Start in portrait with nice phone frame
+                setOrientation('portrait');
+            }
+
+            // Update title
+            const titleEl = document.getElementById('game-title');
+            if (titleEl && document.title) {
+                titleEl.textContent = document.title.replace('• Playable', '').trim();
+            }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
