@@ -10,6 +10,7 @@
             background: #0f0f11;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             color: #e5e7eb;
+            overflow-x: hidden;
         }
 
         #control-bar {
@@ -35,7 +36,6 @@
             align-items: flex-start;
         }
 
-        /* Playable Area - Centered */
         .playable-wrapper {
             flex: 1;
             display: flex;
@@ -56,10 +56,9 @@
         .landscape {
             max-width: 640px;
             height: 360px;
-            border-radius: 24px;
+            border-radius: '24px';
         }
 
-        /* QR Code Sidebar */
         .qr-sidebar {
             width: 220px;
             background: #18181b;
@@ -72,15 +71,11 @@
 
         .qr-sidebar img {
             width: 180px;
-            height: auto;
-            max-height: 180px;
-            max-width: 180px;
-            object-fit: contain;
+            height: 180px;
             border-radius: 12px;
             background: white;
             padding: 8px;
             margin-bottom: 12px;
-            display: block;
         }
 
         .qr-sidebar h3 {
@@ -102,15 +97,21 @@
             color: #6b7280;
         }
 
+        /* ========== MOBILE FIXES ========== */
         @media (max-width: 900px) {
             .main-container {
-                flex-direction: column;
-                align-items: center;
+                padding: 0;
+                gap: 0;
+                max-width: 100%;
             }
+
             .qr-sidebar {
+                display: none; /* Hide QR on mobile */
+            }
+
+            .playable-wrapper {
                 width: 100%;
-                max-width: 300px;
-                margin-top: 20px;
+                padding: 0;
             }
         }
     </style>
@@ -124,7 +125,6 @@
         </div>
 
         <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
-            <!-- Orientation -->
             <div style="display:flex; background:#27251f; border-radius:9999px; padding:2px; border:1px solid #3f3f46;">
                 <button onclick="setOrientation('portrait')" 
                         style="padding:5px 14px; border-radius:9999px; border:none; background:#3f3f46; color:white; cursor:pointer; font-size:11px;">
@@ -151,7 +151,7 @@
     <!-- Main Content -->
     <div class="main-container">
 
-        <!-- Playable (Centered) -->
+        <!-- Playable -->
         <div class="playable-wrapper">
             <iframe id="game-frame" src="playable.html" frameborder="0"></iframe>
         </div>
@@ -159,17 +159,9 @@
         <!-- QR Code Sidebar -->
         <div class="qr-sidebar">
             <h3>Scan to Play</h3>
-            
-            <!-- QR Code Image -->
-            <!-- Place your QR code image as "qr.png" in this same folder -->
-            <img id="qr-image" src="qr.png" alt="QR Code" 
-                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27180%27 height=%27180%27%3E%3Crect width=%27180%27 height=%27180%27 fill=%27%23f3f4f6%27/%3E%3Ctext x=%2290%27 y=%2295%27 font-size=%2714%27 fill=%27%239ca3af%27 text-anchor=%27middle%27%3ENo QR yet%3C/text%3E%3C/svg%27'; this.style.padding='20px';">
-
+            <img id="qr-image" alt="QR Code">
             <p>Scan this QR code with your phone camera to play on mobile in fullscreen.</p>
-            
-            <div class="scan-text">
-                Works best on real device
-            </div>
+            <div class="scan-text">Auto-generated • Always up to date</div>
         </div>
 
     </div>
@@ -214,34 +206,23 @@
             const isMobile = /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth <= 768;
 
             if (isMobile) {
-                // Mobile: Full width, no frame
+                // Mobile: Make playable take almost full screen
+                frame.style.width = '100%';
                 frame.style.maxWidth = '100%';
                 frame.style.height = 'calc(100vh - 52px)';
                 frame.style.border = 'none';
                 frame.style.borderRadius = '0';
                 frame.style.margin = '0';
+                frame.style.boxShadow = 'none';
 
-                // Improved mobile fullscreen handling (iOS/Android safe attempt)
-                const tryFullscreen = () => {
-                    const el = document.documentElement;
-                    if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
-                    else if ((el).webkitRequestFullscreen) (el).webkitRequestFullscreen();
-                };
+                // Hide QR sidebar on mobile
+                const qrSidebar = document.querySelector('.qr-sidebar');
+                if (qrSidebar) qrSidebar.style.display = 'none';
 
-                // Try immediately
-                setTimeout(tryFullscreen, 500);
-
-                // Fallback: trigger on first user interaction (important for iOS Safari)
-                const gestureHandler = () => {
-                    tryFullscreen();
-                    window.removeEventListener('touchstart', gestureHandler);
-                    window.removeEventListener('click', gestureHandler);
-                };
-
-                window.addEventListener('touchstart', gestureHandler, { once: true });
-                window.addEventListener('click', gestureHandler, { once: true });
+                // Prevent scroll bars
+                document.body.style.overflow = 'hidden';
             } else {
-                // Desktop: Start in portrait with nice phone frame
+                // Desktop
                 setOrientation('portrait');
             }
 
@@ -249,6 +230,14 @@
             const titleEl = document.getElementById('game-title');
             if (titleEl && document.title) {
                 titleEl.textContent = document.title.replace('• Playable', '').trim();
+            }
+
+            // Auto-generate QR code
+            const playableUrl = window.location.href;
+            const qrImg = document.getElementById('qr-image');
+            if (qrImg) {
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(playableUrl)}`;
+                qrImg.alt = 'QR Code - ' + playableUrl;
             }
         }
 
