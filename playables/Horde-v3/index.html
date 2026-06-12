@@ -13,29 +13,18 @@
             overflow-x: hidden;
         }
 
-        #control-bar {
-            position: sticky;
-            top: 0;
-            z-index: 9999;
-            background: #18181b;
-            border-bottom: 1px solid #27251f;
-            height: 52px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            font-size: 13px;
-        }
-
         .main-container {
             display: flex;
             gap: 24px;
-            padding: 24px;
+            padding: 32px 24px 32px 24px;
             max-width: 1200px;
             margin: 0 auto;
             align-items: center;
-            min-height: calc(100vh - 52px);
+            min-height: 100vh;
             box-sizing: border-box;
+            justify-content: center;
+            padding-top: 32px;
+            padding-bottom: 32px;
         }
 
         .playable-wrapper {
@@ -43,7 +32,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: calc(100vh - 100px);
+            min-height: auto;
         }
 
         .device-frame {
@@ -55,12 +44,13 @@
                 0 25px 60px rgba(0,0,0,0.55),
                 inset 0 2px 4px rgba(255,255,255,0.06),
                 inset 0 -4px 8px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.06);
         }
 
         #game-frame {
             width: 100%;
-            max-width: 380px;
-            height: 640px;
+            max-width: 420px;
+            height: 760px;
             border: none;
             border-radius: 28px;
             overflow: hidden;
@@ -71,8 +61,8 @@
         }
 
         .landscape {
-            max-width: 720px;
-            height: 405px;
+            max-width: 900px;
+            height: 506px;
             border-radius: 24px;
         }
 
@@ -117,9 +107,11 @@
         /* ========== MOBILE FIXES ========== */
         @media (max-width: 900px) {
             .main-container {
-                padding: 0;
+                padding: 16px;
                 gap: 0;
                 max-width: 100%;
+                align-items: center;
+                justify-content: center;
             }
 
             .qr-sidebar {
@@ -143,36 +135,6 @@
     </style>
 </head>
 <body>
-
-    <!-- Top Control Bar -->
-    <div id="control-bar">
-        <div style="display:flex; align-items:center; gap:10px; font-weight:600;">
-            <span id="game-title">Idle Mine</span>
-        </div>
-
-        <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
-            <div style="display:flex; background:#27251f; border-radius:9999px; padding:2px; border:1px solid #3f3f46;">
-                <button onclick="setOrientation('portrait')" 
-                        style="padding:5px 14px; border-radius:9999px; border:none; background:#3f3f46; color:white; cursor:pointer; font-size:11px;">
-                    📱 Portrait
-                </button>
-                <button onclick="setOrientation('landscape')" 
-                        style="padding:5px 14px; border-radius:9999px; border:none; background:transparent; color:#a1a1aa; cursor:pointer; font-size:11px;">
-                    📱 Landscape
-                </button>
-            </div>
-
-            <button onclick="toggleFullscreen()" 
-                    style="padding:6px 12px; background:#27251f; border:1px solid #3f3f46; border-radius:9999px; color:#a1a1aa; cursor:pointer; font-size:11px;">
-                ⛶ Fullscreen
-            </button>
-
-            <button onclick="closePlayable()" 
-                    style="padding:6px 12px; background:#450a0a; border:1px solid #7f1d1d; border-radius:9999px; color:#fda4af; cursor:pointer; font-size:11px;">
-                ✕ Close
-            </button>
-        </div>
-    </div>
 
     <!-- Main Content -->
     <div class="main-container">
@@ -199,36 +161,17 @@
 
         function setOrientation(mode) {
             if (mode === 'portrait') {
-                frame.style.maxWidth = '380px';
-                frame.style.height = '640px';
+                frame.style.maxWidth = '420px';
+                frame.style.height = '760px';
                 frame.style.borderRadius = '28px';
                 frame.classList.remove('landscape');
             } else {
-                frame.style.maxWidth = '720px';
-                frame.style.height = '405px';
+                frame.style.maxWidth = '900px';
+                frame.style.height = '506px';
                 frame.style.borderRadius = '24px';
                 frame.classList.add('landscape');
             }
             frame.style.width = '100%';
-        }
-
-        function toggleFullscreen() {
-            const elem = document.documentElement;
-            if (!document.fullscreenElement) {
-                elem.requestFullscreen?.();
-            } else {
-                document.exitFullscreen?.();
-            }
-        }
-
-        function closePlayable() {
-            if (confirm('Close this playable?')) {
-                if (window.mraid && typeof mraid.close === 'function') {
-                    mraid.close();
-                } else {
-                    window.close();
-                }
-            }
         }
 
         function init() {
@@ -238,7 +181,7 @@
                 // Mobile: Make playable take almost full screen
                 frame.style.width = '100%';
                 frame.style.maxWidth = '100%';
-                frame.style.height = 'calc(100vh - 52px)';
+                frame.style.height = '78vh';
                 frame.style.border = 'none';
                 frame.style.borderRadius = '0';
                 frame.style.margin = '0';
@@ -262,12 +205,6 @@
             } else {
                 // Desktop
                 setOrientation('portrait');
-            }
-
-            // Update title
-            const titleEl = document.getElementById('game-title');
-            if (titleEl && document.title) {
-                titleEl.textContent = document.title.replace('• Playable', '').trim();
             }
 
             // Auto-generate QR code
