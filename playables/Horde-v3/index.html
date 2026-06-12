@@ -33,30 +33,47 @@
             padding: 24px;
             max-width: 1200px;
             margin: 0 auto;
-            align-items: flex-start;
+            align-items: center;
+            min-height: calc(100vh - 52px);
+            box-sizing: border-box;
         }
 
         .playable-wrapper {
             flex: 1;
             display: flex;
             justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 100px);
+        }
+
+        .device-frame {
+            position: relative;
+            padding: 18px;
+            border-radius: 42px;
+            background: linear-gradient(145deg, #2b2b31, #111114);
+            box-shadow:
+                0 25px 60px rgba(0,0,0,0.55),
+                inset 0 2px 4px rgba(255,255,255,0.06),
+                inset 0 -4px 8px rgba(0,0,0,0.5);
         }
 
         #game-frame {
             width: 100%;
             max-width: 380px;
             height: 640px;
-            border: 12px solid #27251f;
-            border-radius: 32px;
+            border: none;
+            border-radius: 28px;
+            overflow: hidden;
+            display: block;
             box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.6);
             background: #000;
             transition: all 0.3s ease;
         }
 
         .landscape {
-            max-width: 640px;
-            height: 360px;
-            border-radius: '24px';
+            max-width: 720px;
+            height: 405px;
+            border-radius: 24px;
         }
 
         .qr-sidebar {
@@ -109,6 +126,15 @@
                 display: none; /* Hide QR on mobile */
             }
 
+            .device-frame {
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                border-radius: 0;
+                background: transparent;
+                box-shadow: none;
+            }
+
             .playable-wrapper {
                 width: 100%;
                 padding: 0;
@@ -153,7 +179,9 @@
 
         <!-- Playable -->
         <div class="playable-wrapper">
-            <iframe id="game-frame" src="playable.html" frameborder="0"></iframe>
+            <div class="device-frame">
+                <iframe id="game-frame" src="playable.html" frameborder="0"></iframe>
+            </div>
         </div>
 
         <!-- QR Code Sidebar -->
@@ -173,14 +201,15 @@
             if (mode === 'portrait') {
                 frame.style.maxWidth = '380px';
                 frame.style.height = '640px';
-                frame.style.borderRadius = '32px';
+                frame.style.borderRadius = '28px';
                 frame.classList.remove('landscape');
             } else {
-                frame.style.maxWidth = '640px';
-                frame.style.height = '360px';
+                frame.style.maxWidth = '720px';
+                frame.style.height = '405px';
                 frame.style.borderRadius = '24px';
                 frame.classList.add('landscape');
             }
+            frame.style.width = '100%';
         }
 
         function toggleFullscreen() {
@@ -214,6 +243,15 @@
                 frame.style.borderRadius = '0';
                 frame.style.margin = '0';
                 frame.style.boxShadow = 'none';
+
+                // Adjust device frame on mobile
+                const deviceFrame = document.querySelector('.device-frame');
+                if (deviceFrame) {
+                    deviceFrame.style.padding = '0';
+                    deviceFrame.style.background = 'transparent';
+                    deviceFrame.style.boxShadow = 'none';
+                    deviceFrame.style.borderRadius = '0';
+                }
 
                 // Hide QR sidebar on mobile
                 const qrSidebar = document.querySelector('.qr-sidebar');
