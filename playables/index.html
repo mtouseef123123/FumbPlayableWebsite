@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playable Preview</title>
+    <style>
+        body { margin: 0; background: #0f0f11; font-family: system-ui; color: #e5e7eb; }
+        .main-container { 
+            display: flex; flex-direction: row; gap: 24px; padding: 40px 20px; 
+            max-width: 1200px; margin: 0 auto; align-items: center; justify-content: center; min-height: 100vh; 
+        }
+        .qr-sidebar { width: 220px; background: #18181b; border: 1px solid #27251f; border-radius: 16px; padding: 20px; text-align: center; }
+        .qr-sidebar img { width: 180px; height: 180px; border-radius: 12px; background: white; padding: 8px; margin-bottom: 12px; }
+        .playable-wrapper { flex: 1; display: flex; justify-content: center; align-items: center; }
+        .device-frame { padding: 14px; border-radius: 42px; background: linear-gradient(145deg, #2b2b31, #111114); box-shadow: 0 25px 60px rgba(0,0,0,0.55); width: fit-content; }
+        #game-frame { width: 360px; height: 640px; aspect-ratio: 9 / 16; border: none; border-radius: 28px; background: #000; }
+
+        @media (max-width: 900px) {
+            .main-container { flex-direction: column; padding: 24px 16px; }
+            .qr-sidebar { display: none; }
+            .device-frame { width: min(92vw, 380px); padding: 12px; border-radius: 32px; }
+            #game-frame { width: 100%; height: auto; aspect-ratio: 9 / 16; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <!-- QR Sidebar -->
+        <div class="qr-sidebar">
+            <h3>Scan to Play</h3>
+            <img id="qr-image" alt="QR Code">
+            <p style="margin:0; font-size:12px; color:#9ca3af;">Scan to play on mobile</p>
+        </div>
+
+        <!-- Playable -->
+        <div class="playable-wrapper">
+            <div class="device-frame">
+                <iframe id="game-frame" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function init() {
+            const params = new URLSearchParams(window.location.search);
+            const gameId = params.get('game');
+
+            if (!gameId) {
+                document.body.innerHTML = `<h2 style="text-align:center; padding-top:100px; color:#ef4444;">Missing game parameter<br><small>Use ?game=your-game-name</small></h2>`;
+                return;
+            }
+
+            // Load the correct playable
+            const frame = document.getElementById('game-frame');
+            frame.src = `./${gameId}/playable.html`;
+
+            // Auto-generate QR code
+            const playableUrl = window.location.href;
+            const qrImg = document.getElementById('qr-image');
+            if (qrImg) {
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(playableUrl)}`;
+            }
+
+            // Mobile handling
+            const isMobile = /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth <= 768;
+            if (isMobile) {
+                frame.style.border = 'none';
+                frame.style.boxShadow = 'none';
+            }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

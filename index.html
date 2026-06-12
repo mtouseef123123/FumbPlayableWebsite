@@ -178,27 +178,27 @@
                         <div class="w-6 h-6 rounded-full bg-emerald-500/10 text-emerald-400 flex-shrink-0 flex items-center justify-center text-xs font-mono font-bold">1</div>
                         <div>
                             <div class="font-medium">Create folder</div>
-                            <div class="text-zinc-400 text-xs mt-0.5">Duplicate <span class="font-mono text-emerald-400">/playables/demo-bitcoin-miner</span> and rename it (e.g. <span class="font-mono">playable-5</span>)</div>
+                            <div class="text-zinc-400 text-xs mt-0.5">Create a new folder inside <span class="font-mono text-emerald-400">/playables/</span> (e.g. <span class="font-mono">my-new-game</span>)</div>
                         </div>
                     </div>
                     <div class="flex gap-4">
                         <div class="w-6 h-6 rounded-full bg-emerald-500/10 text-emerald-400 flex-shrink-0 flex items-center justify-center text-xs font-mono font-bold">2</div>
                         <div>
-                            <div class="font-medium">Update the playable</div>
-                            <div class="text-zinc-400 text-xs mt-0.5">Edit <span class="font-mono text-emerald-400">playables/your-playable/index.html</span> — replace the game content inside <span class="font-mono">#game-frame</span></div>
+                            <div class="font-medium">Add your game</div>
+                            <div class="text-zinc-400 text-xs mt-0.5">Put your game file as <span class="font-mono text-emerald-400">playable.html</span> inside the new folder</div>
                         </div>
                     </div>
                     <div class="flex gap-4">
                         <div class="w-6 h-6 rounded-full bg-emerald-500/10 text-emerald-400 flex-shrink-0 flex items-center justify-center text-xs font-mono font-bold">3</div>
                         <div>
                             <div class="font-medium">Register it here</div>
-                            <div class="text-zinc-400 text-xs mt-0.5">Open this <span class="font-mono text-emerald-400">index.html</span> and add a new object to the <span class="font-mono">playables</span> array in the script tag.</div>
+                            <div class="text-zinc-400 text-xs mt-0.5">Add a new object to the <span class="font-mono text-emerald-400">playables</span> array in the script below</div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="mt-6 text-xs bg-zinc-950 border border-zinc-800 p-3 rounded-2xl text-zinc-400">
-                    <strong class="text-emerald-400">Pro tip:</strong> All your playables automatically get the same mobile fullscreen + desktop rotate experience from the shared template code.
+                    <strong class="text-emerald-400">Pro tip:</strong> All playables now use one shared wrapper file. Just add <span class="font-mono">playable.html</span> in each folder.
                 </div>
             </div>
         </div>
@@ -223,7 +223,6 @@
                     <ul class="text-xs space-y-1 pl-1 text-zinc-400">
                         <li>• Open this page on your phone (or scan any QR)</li>
                         <li>• Tap any playable card → it launches in <strong>fullscreen</strong></li>
-                        <li>• Use the rotate buttons inside the playable to switch portrait / landscape</li>
                     </ul>
                 </div>
                 
@@ -231,16 +230,14 @@
                     <div class="font-medium text-emerald-400 mb-1 flex items-center gap-x-2"><i class="fa-solid fa-desktop fa-fw"></i> On Desktop</div>
                     <ul class="text-xs space-y-1 pl-1 text-zinc-400">
                         <li>• Click "Open Playable" — shows inside a realistic phone frame</li>
-                        <li>• Click <strong>Portrait / Landscape</strong> buttons to test both orientations</li>
-                        <li>• Click Fullscreen to test real browser fullscreen</li>
                     </ul>
                 </div>
                 
                 <div class="pt-3 border-t border-zinc-800 text-xs">
-                    <strong>Important before going live:</strong><br>
-                    1. Change the <code class="bg-zinc-950 px-1.5 py-0.5 rounded text-emerald-400">baseUrl</code> variable in the JavaScript section below to your real domain.<br>
-                    2. Update each playable's title and description in the array.<br>
-                    3. Replace demo game content with your actual playable HTML/JS.
+                    <strong>Important:</strong><br>
+                    1. Update <code class="bg-zinc-950 px-1.5 py-0.5 rounded text-emerald-400">BASE_URL</code> at the top.<br>
+                    2. Add new playables in the <code class="bg-zinc-950 px-1.5 py-0.5 rounded text-emerald-400">playables</code> array below.<br>
+                    3. Each playable only needs a <code class="bg-zinc-950 px-1.5 py-0.5 rounded text-emerald-400">playable.html</code> file.
                 </div>
             </div>
         </div>
@@ -248,15 +245,9 @@
 
     <script>
         // ==================== CONFIGURATION ====================
-        // ⚠️ CHANGE THIS to your actual hosted URL before going live!
-        // Examples: 
-        //   "https://yourname.github.io/my-playables/"
-        //   "https://playables.yourdomain.com/"
-        //   "http://192.168.1.105:8000/"   (for local testing)
-        const BASE_URL = "https://mtouseef123123.github.io/FumbPlayableWebsite/";   // <-- CHANGE ME
+        const BASE_URL = "https://mtouseef123123.github.io/FumbPlayableWebsite/";
 
         // ==================== PLAYABLES DATA ====================
-        // Add / edit / remove items here. The grid updates automatically.
         const playables = [
             {
                 id: "idle-mine",
@@ -266,26 +257,22 @@
                 color: "#eab308",
                 category: "Idle"
             },
-{
+            {
                 id: "Horde-v2",
-                title: "Idle Bitcoin Miner",
+                title: "Horde v2",
                 desc: "Tap to mine Bitcoin and grow your empire. Simple idle playable demo.",
                 icon: "⛏️",
                 color: "#eab308",
                 category: "Idle"
-},
-
-{
-     id: "Horde-v3",
-                title: "Idle Bitcoin Miner",
+            },
+            {
+                id: "Horde-v3",
+                title: "Horde v3",
                 desc: "Tap to mine Bitcoin and grow your empire. Simple idle playable demo.",
                 icon: "⛏️",
                 color: "#eab308",
                 category: "Idle"
-},
-
-
-
+            }
         ];
 
         // ==================== RENDER CARDS ====================
@@ -296,7 +283,6 @@
             playables.forEach(playable => {
                 const cardHTML = `
                     <div class="playable-card bg-zinc-900 border border-zinc-700 hover:border-zinc-600 rounded-3xl overflow-hidden flex flex-col">
-                        <!-- Card Header -->
                         <div class="px-5 pt-5 pb-3 flex items-start justify-between">
                             <div>
                                 <div class="flex items-center gap-x-3">
@@ -316,15 +302,14 @@
                             </div>
                         </div>
 
-                        <!-- Description -->
                         <div class="px-5 text-xs text-zinc-400 line-clamp-2 h-[32px]">
                             ${playable.desc}
                         </div>
 
-                        <!-- QR Code -->
+                        <!-- QR Code (Updated for new structure) -->
                         <div class="px-5 pt-4 pb-2 flex justify-center">
                             <div class="qr-container">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(BASE_URL + 'playables/' + playable.id + '/')}" 
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(BASE_URL + 'playables/?game=' + playable.id)}" 
                                      alt="QR Code for ${playable.title}"
                                      class="w-[130px] h-[130px] rounded-xl"
                                      onerror="this.src='https://placehold.co/130x130/18181b/64748b?text=QR+Error'">
@@ -350,13 +335,14 @@
             });
         }
 
+        // ==================== UPDATED openPlayable ====================
         function openPlayable(id) {
-            const url = BASE_URL + 'playables/' + id + '/';
+            const url = BASE_URL + 'playables/?game=' + id;
             window.open(url, '_blank');
         }
 
         function copyLink(id, btnElement) {
-            const url = BASE_URL + 'playables/' + id + '/';
+            const url = BASE_URL + 'playables/?game=' + id;
             navigator.clipboard.writeText(url).then(() => {
                 const originalText = btnElement.innerHTML;
                 btnElement.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i>`;
@@ -364,7 +350,6 @@
                     btnElement.innerHTML = originalText;
                 }, 1800);
             }).catch(() => {
-                // Fallback
                 prompt("Copy this URL:", url);
             });
         }
@@ -384,7 +369,6 @@
         function init() {
             renderCards();
             
-            // Keyboard hint
             console.log('%c[Playables] Press "?" to show instructions', 'color:#3f3f46');
             
             document.addEventListener('keydown', function(e) {
@@ -399,10 +383,9 @@
                 }
             });
             
-            // Warn if BASE_URL is still default
             if (BASE_URL.includes('your-playables-site.com')) {
                 setTimeout(() => {
-                    console.warn('%c[IMPORTANT] Please update the BASE_URL variable at the top of index.html to your real domain!', 'color:#f59e0b; font-size: 10px');
+                    console.warn('%c[IMPORTANT] Please update the BASE_URL variable!', 'color:#f59e0b; font-size: 10px');
                 }, 1200);
             }
         }
