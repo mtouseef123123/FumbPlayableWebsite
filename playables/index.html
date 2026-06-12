@@ -16,10 +16,10 @@
         .main-container { 
             display: flex; 
             flex-direction: row; 
-            gap: 24px; 
-            padding: 40px 20px; 
-            max-width: 1200px; 
-            margin: 0 auto; 
+            gap: 100px; 
+            padding: 24px 8px; 
+            max-width: 100%; 
+            margin: 0; 
             align-items: center; 
             justify-content: center; 
             min-height: 100vh; 
@@ -28,6 +28,8 @@
 
         .qr-sidebar { 
             width: 220px; 
+            max-width: 220px;
+            flex: 0 0 auto;
             background: #18181b; 
             border: 1px solid #27251f; 
             border-radius: 16px; 
@@ -46,7 +48,9 @@
         }
 
         .playable-wrapper { 
-            flex: 1; 
+            flex: 0 0 auto !important; 
+            flex-grow: 0 !important;
+            flex-shrink: 0 !important;
             display: flex; 
             justify-content: center; 
             align-items: center; 
