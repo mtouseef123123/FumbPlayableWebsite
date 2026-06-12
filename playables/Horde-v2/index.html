@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Idle Mine • Playable</title>
+    <title>Playble preview</title>
     <style>
         body {
             margin: 0;
@@ -13,54 +13,22 @@
             overflow-x: hidden;
         }
 
-        #control-bar {
-            position: sticky;
-            top: 0;
-            z-index: 9999;
-            background: #18181b;
-            border-bottom: 1px solid #27251f;
-            height: 52px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            font-size: 13px;
-        }
-
         .main-container {
             display: flex;
             gap: 24px;
-            padding: 24px;
+            padding: 32px 24px 32px 24px;
             max-width: 1200px;
             margin: 0 auto;
-            align-items: flex-start;
-        }
-
-        .playable-wrapper {
-            flex: 1;
-            display: flex;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
             justify-content: center;
-        }
-
-        #game-frame {
-            width: 100%;
-            max-width: 380px;
-            height: 640px;
-            border: 12px solid #27251f;
-            border-radius: 32px;
-            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.6);
-            background: #000;
-            transition: all 0.3s ease;
-        }
-
-        .landscape {
-            max-width: 640px;
-            height: 360px;
-            border-radius: '24px';
+            padding-top: 32px;
+            padding-bottom: 32px;
         }
 
         .qr-sidebar {
-            width: 220px;
+            width: 240px;
             background: #18181b;
             border: 1px solid #27251f;
             border-radius: 16px;
@@ -84,29 +52,81 @@
             color: #f3e8ff;
         }
 
-        .qr-sidebar p {
-            margin: 0;
-            font-size: 12px;
-            color: #9ca3af;
-            line-height: 1.4;
+        .playable-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: auto;
         }
 
-        .scan-text {
-            margin-top: 12px;
-            font-size: 11px;
-            color: #6b7280;
+        .device-frame {
+            position: relative;
+            padding: 12px;
+            border-radius: 42px;
+            background: linear-gradient(145deg, #2b2b31, #111114);
+            box-shadow:
+                0 25px 60px rgba(0,0,0,0.55),
+                inset 0 2px 4px rgba(255,255,255,0.06),
+                inset 0 -4px 8px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.06);
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        #game-frame {
+            height: 85vh;
+            width: auto;
+            aspect-ratio: 9 / 16;
+            max-height: 960px;
+            border: none;
+            border-radius: 28px;
+            overflow: hidden;
+            display: block;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.6);
+            background: #000;
+            transition: all 0.3s ease;
+        }
+
+        .landscape {
+            width: 90vw;
+            height: calc(90vw * 0.5625);
+            max-width: 960px;
+            max-height: 540px;
+            border-radius: 24px;
         }
 
         /* ========== MOBILE FIXES ========== */
         @media (max-width: 900px) {
             .main-container {
-                padding: 0;
+                padding: 16px;
                 gap: 0;
                 max-width: 100%;
+                align-items: center;
+                justify-content: center;
             }
 
             .qr-sidebar {
-                display: none; /* Hide QR on mobile */
+                display: none;
+            }
+
+            .device-frame {
+                width: fit-content;
+                max-width: 100%;
+                padding: 10px;
+                border-radius: 28px;
+                background: linear-gradient(145deg, #2b2b31, #111114);
+                box-shadow:
+                    0 18px 40px rgba(0,0,0,0.45),
+                    inset 0 2px 4px rgba(255,255,255,0.05),
+                    inset 0 -4px 8px rgba(0,0,0,0.4);
+            }
+
+            #game-frame {
+                width: min(92vw, 540px);
+                height: calc(width * 1.7777778);
+                max-height: 88vh;
+                border-radius: 22px;
             }
 
             .playable-wrapper {
@@ -118,50 +138,26 @@
 </head>
 <body>
 
-    <!-- Top Control Bar -->
-    <div id="control-bar">
-        <div style="display:flex; align-items:center; gap:10px; font-weight:600;">
-            <span id="game-title">Idle Mine</span>
-        </div>
-
-        <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
-            <div style="display:flex; background:#27251f; border-radius:9999px; padding:2px; border:1px solid #3f3f46;">
-                <button onclick="setOrientation('portrait')" 
-                        style="padding:5px 14px; border-radius:9999px; border:none; background:#3f3f46; color:white; cursor:pointer; font-size:11px;">
-                    📱 Portrait
-                </button>
-                <button onclick="setOrientation('landscape')" 
-                        style="padding:5px 14px; border-radius:9999px; border:none; background:transparent; color:#a1a1aa; cursor:pointer; font-size:11px;">
-                    📱 Landscape
-                </button>
-            </div>
-
-            <button onclick="toggleFullscreen()" 
-                    style="padding:6px 12px; background:#27251f; border:1px solid #3f3f46; border-radius:9999px; color:#a1a1aa; cursor:pointer; font-size:11px;">
-                ⛶ Fullscreen
-            </button>
-
-            <button onclick="closePlayable()" 
-                    style="padding:6px 12px; background:#450a0a; border:1px solid #7f1d1d; border-radius:9999px; color:#fda4af; cursor:pointer; font-size:11px;">
-                ✕ Close
-            </button>
-        </div>
-    </div>
-
     <!-- Main Content -->
     <div class="main-container">
 
-        <!-- Playable -->
-        <div class="playable-wrapper">
-            <iframe id="game-frame" src="playable.html" frameborder="0"></iframe>
-        </div>
-
-        <!-- QR Code Sidebar -->
+        <!-- QR Sidebar (Left) -->
         <div class="qr-sidebar">
             <h3>Scan to Play</h3>
             <img id="qr-image" alt="QR Code">
-            <p>Scan this QR code with your phone camera to play on mobile in fullscreen.</p>
-            <div class="scan-text">Auto-generated • Always up to date</div>
+            <p style="margin:0;font-size:12px;color:#9ca3af;line-height:1.4;">
+                Scan this QR code with your phone camera to play on mobile in fullscreen.
+            </p>
+            <div style="margin-top:12px;font-size:11px;color:#6b7280;">
+                Auto-generated • Always up to date
+            </div>
+        </div>
+
+        <!-- Playable -->
+        <div class="playable-wrapper">
+            <div class="device-frame">
+                <iframe id="game-frame" src="playable.html" frameborder="0"></iframe>
+            </div>
         </div>
 
     </div>
@@ -170,35 +166,14 @@
         const frame = document.getElementById('game-frame');
 
         function setOrientation(mode) {
-            if (mode === 'portrait') {
-                frame.style.maxWidth = '380px';
-                frame.style.height = '640px';
-                frame.style.borderRadius = '32px';
-                frame.classList.remove('landscape');
+            if (mode === 'landscape') {
+                frame.style.width = '960px';
+                frame.style.height = '540px';
+                frame.style.aspectRatio = '16 / 9';
             } else {
-                frame.style.maxWidth = '640px';
-                frame.style.height = '360px';
-                frame.style.borderRadius = '24px';
-                frame.classList.add('landscape');
-            }
-        }
-
-        function toggleFullscreen() {
-            const elem = document.documentElement;
-            if (!document.fullscreenElement) {
-                elem.requestFullscreen?.();
-            } else {
-                document.exitFullscreen?.();
-            }
-        }
-
-        function closePlayable() {
-            if (confirm('Close this playable?')) {
-                if (window.mraid && typeof mraid.close === 'function') {
-                    mraid.close();
-                } else {
-                    window.close();
-                }
+                frame.style.width = '512px';
+                frame.style.height = '512px';
+                frame.style.aspectRatio = '1 / 1';
             }
         }
 
@@ -206,30 +181,22 @@
             const isMobile = /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth <= 768;
 
             if (isMobile) {
-                // Mobile: Make playable take almost full screen
-                frame.style.width = '100%';
-                frame.style.maxWidth = '100%';
-                frame.style.height = 'calc(100vh - 52px)';
+                // Mobile: clean full playable (no UI)
+                frame.style.width = '100vw';
+                frame.style.height = '100vh';
                 frame.style.border = 'none';
                 frame.style.borderRadius = '0';
-                frame.style.margin = '0';
                 frame.style.boxShadow = 'none';
+                frame.style.background = '#000';
 
-                // Hide QR sidebar on mobile
-                const qrSidebar = document.querySelector('.qr-sidebar');
-                if (qrSidebar) qrSidebar.style.display = 'none';
-
-                // Prevent scroll bars
                 document.body.style.overflow = 'hidden';
             } else {
-                // Desktop
-                setOrientation('portrait');
-            }
-
-            // Update title
-            const titleEl = document.getElementById('game-title');
-            if (titleEl && document.title) {
-                titleEl.textContent = document.title.replace('• Playable', '').trim();
+                // Desktop (default square preview)
+                frame.style.width = '512px';
+                frame.style.height = '512px';
+                frame.style.aspectRatio = '1 / 1';
+                frame.style.borderRadius = '28px';
+                frame.style.boxShadow = '0 25px 50px -12px rgb(0 0 0 / 0.6)';
             }
 
             // Auto-generate QR code
@@ -244,4 +211,4 @@
         window.onload = init;
     </script>
 </body>
-</html> 
+</html>
