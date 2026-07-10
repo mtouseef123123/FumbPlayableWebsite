@@ -356,7 +356,7 @@
             const gameId = params.get("game");
 
             if (!gameId) {
-                document.body.innerHTML = '<div style="display:grid;place-items:center;min-height:100vh;padding:24px;text-align:center"><div><h1>Missing game parameter</h1><p>Use playables/?game=your-folder-name</p><p><a style="color:#38bdf8" href="../">Back to library</a></p></div></div>';
+                document.body.innerHTML = '<div style="display:grid;place-items:center;min-height:100vh;padding:24px;text-align:center"><div><h1>Missing game parameter</h1><p>Use playables/index.html?game=your-folder-name</p><p><a style="color:#38bdf8" href="../">Back to library</a></p></div></div>';
                 return;
             }
 
