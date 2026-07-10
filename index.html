@@ -3,406 +3,730 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Playables • Showcase</title>
+    <title>Fumb Playables</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2308090b'/%3E%3Cpath d='M18 38h28a10 10 0 0 0 0-20H18a10 10 0 0 0 0 20Z' fill='%2334d399'/%3E%3Ccircle cx='22' cy='28' r='3' fill='%2308090b'/%3E%3Ccircle cx='42' cy='28' r='3' fill='%2308090b'/%3E%3Cpath d='M28 34h8' stroke='%2308090b' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap');
+
         :root {
-            --primary: #22c55e;
+            --bg: #08090b;
+            --panel: #111317;
+            --panel-2: #171a20;
+            --line: #272b33;
+            --muted: #97a0ae;
+            --text: #f3f5f7;
+            --mint: #34d399;
+            --gold: #fbbf24;
+            --sky: #38bdf8;
+            --rose: #fb7185;
         }
-        
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Inter', system_ui, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            background:
+                radial-gradient(circle at 18% 0%, rgba(52, 211, 153, .11), transparent 30rem),
+                radial-gradient(circle at 88% 18%, rgba(56, 189, 248, .09), transparent 28rem),
+                linear-gradient(180deg, #0b0d10 0%, var(--bg) 46%, #090a0c 100%);
+            color: var(--text);
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
-        
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
         .font-display {
-            font-family: 'Space Grotesk', 'Inter', sans-serif;
-            font-weight: 600;
+            font-family: "Space Grotesk", Inter, sans-serif;
+        }
+
+        .shell {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(8, 9, 11, .82);
+            backdrop-filter: blur(18px);
+        }
+
+        .brand-mark {
+            display: grid;
+            width: 40px;
+            height: 40px;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 8px;
+            background: linear-gradient(145deg, #262b33, #111317);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 330px;
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .panel {
+            border: 1px solid rgba(255, 255, 255, .09);
+            border-radius: 8px;
+            background: rgba(17, 19, 23, .78);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .28);
+        }
+
+        .stat-card,
+        .playable-card,
+        .empty-state,
+        .help-card {
+            border: 1px solid rgba(255, 255, 255, .09);
+            border-radius: 8px;
+            background: linear-gradient(180deg, rgba(23, 26, 32, .92), rgba(13, 15, 18, .96));
         }
 
         .playable-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 380px;
+            overflow: hidden;
+            transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
         }
-        
+
         .playable-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, .18);
+            box-shadow: 0 22px 44px rgba(0, 0, 0, .36);
         }
 
-        .section-header {
-            font-size: 1.75rem;
-            line-height: 1.1;
-            font-weight: 700;
-            letter-spacing: -.025em;
+        .accent-line {
+            height: 4px;
+            background: var(--card-color, var(--mint));
         }
 
-        .qr-container {
-            background: white;
+        .qr-box {
+            display: grid;
+            place-items: center;
+            width: 140px;
+            height: 140px;
             padding: 8px;
-            border-radius: 12px;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-            display: inline-block;
+            border: 1px solid rgba(0, 0, 0, .08);
+            border-radius: 8px;
+            background: #fff;
         }
 
-        .nav-active {
-            background-color: #18181b;
-            color: white;
-            border-radius: 9999px;
+        .qr-box img {
+            width: 122px;
+            height: 122px;
+            border-radius: 4px;
         }
 
-        .game-frame {
-            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
-            transition: width 0.4s ease, height 0.4s ease, transform 0.4s ease;
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 40px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, .1);
+            padding: 0 14px;
+            color: #f8fafc;
+            background: rgba(255, 255, 255, .06);
+            transition: background .18s ease, border-color .18s ease, transform .18s ease;
         }
 
-        .metric {
-            transition: all 0.2s ease;
+        .btn:hover {
+            border-color: rgba(255, 255, 255, .2);
+            background: rgba(255, 255, 255, .1);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn-primary {
+            border-color: rgba(255, 255, 255, .92);
+            background: #f8fafc;
+            color: #09090b;
+            font-weight: 700;
+        }
+
+        .btn-icon {
+            width: 40px;
+            padding: 0;
+        }
+
+        .field {
+            min-height: 42px;
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 8px;
+            background: rgba(8, 9, 11, .86);
+            color: var(--text);
+            outline: none;
+        }
+
+        .field:focus {
+            border-color: rgba(56, 189, 248, .55);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, .12);
+        }
+
+        .segmented {
+            display: inline-flex;
+            gap: 4px;
+            padding: 4px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, .04);
+        }
+
+        .segmented button {
+            min-height: 34px;
+            border: 0;
+            border-radius: 6px;
+            padding: 0 12px;
+            color: var(--muted);
+            background: transparent;
+        }
+
+        .segmented button[aria-pressed="true"] {
+            color: #09090b;
+            background: #f8fafc;
+            font-weight: 700;
+        }
+
+        .preview-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 80;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 22px;
+            background: rgba(0, 0, 0, .72);
+            backdrop-filter: blur(14px);
+        }
+
+        .preview-modal.is-open {
+            display: flex;
+        }
+
+        .phone-frame {
+            width: 384px;
+            max-width: calc(100vw - 44px);
+            padding: 12px;
+            border-radius: 34px;
+            background: linear-gradient(145deg, #30343d, #0b0c0f);
+            box-shadow: 0 28px 80px rgba(0, 0, 0, .66);
+        }
+
+        .phone-frame iframe {
+            width: 360px;
+            max-width: 100%;
+            aspect-ratio: 9 / 16;
+            height: auto;
+            min-height: 560px;
+            border: 0;
+            border-radius: 24px;
+            background: #000;
+            display: block;
+        }
+
+        @media (max-width: 900px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar-actions .label {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .shell {
+                width: min(100% - 20px, 1180px);
+            }
+
+            .hero-grid {
+                gap: 12px;
+            }
+
+            .hide-mobile {
+                display: none;
+            }
+
+            .playable-card {
+                min-height: 0;
+            }
+
+            .qr-box {
+                width: 112px;
+                height: 112px;
+            }
+
+            .qr-box img {
+                width: 96px;
+                height: 96px;
+            }
         }
     </style>
 </head>
-<body class="bg-zinc-950 text-zinc-200">
-    <!-- Header -->
-    <header class="border-b border-zinc-800 bg-zinc-900/80 backdrop-blur-lg sticky top-0 z-50">
-        <div class="max-w-screen-xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-x-3">
-                <div class="w-9 h-9 bg-emerald-500 rounded-2xl flex items-center justify-center">
-                    <i class="fa-solid fa-gamepad text-white text-2xl"></i>
+<body>
+    <header class="topbar">
+        <div class="shell py-4 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="brand-mark">
+                    <i class="fa-solid fa-gamepad text-emerald-300"></i>
                 </div>
-                <div>
-                    <span class="font-display text-2xl font-semibold tracking-tighter">Playables</span>
-                    <span class="text-emerald-400 text-sm font-mono ml-1">v1.0</span>
+                <div class="min-w-0">
+                    <div class="font-display text-xl sm:text-2xl leading-none">Fumb Playables</div>
+                    <div class="text-xs text-zinc-500 mt-1">HTML5 playable library</div>
                 </div>
             </div>
-            
-            <div class="flex items-center gap-x-4">
-                <div class="hidden md:flex items-center bg-zinc-900 border border-zinc-700 rounded-3xl px-1 py-1 text-sm">
-                    <div class="px-4 flex items-center gap-x-2">
-                        <i class="fa-solid fa-mobile-screen-button text-emerald-400"></i>
-                        <span class="text-zinc-400">10 Playables</span>
-                    </div>
-                </div>
-                
-                <button onclick="showInstructions()" 
-                        class="flex items-center gap-x-2 px-4 py-2 text-sm font-medium hover:bg-zinc-800 rounded-3xl transition-colors border border-zinc-700">
-                    <i class="fa-solid fa-info-circle"></i>
-                    <span class="hidden sm:inline">How it works</span>
+
+            <div class="topbar-actions flex items-center gap-2">
+                <button id="share-site-btn" class="btn btn-icon" title="Copy site link" aria-label="Copy site link">
+                    <i class="fa-solid fa-link"></i>
+                </button>
+                <button onclick="document.getElementById('add-new').scrollIntoView({ behavior: 'smooth' })" class="btn">
+                    <i class="fa-solid fa-folder-plus"></i>
+                    <span class="label">Add</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <div class="max-w-screen-xl mx-auto px-6 pt-8 pb-12">
-        
-        <!-- Hero -->
-        <div class="max-w-2xl mb-10">
-            <div class="inline-flex items-center gap-x-2 px-3 py-1 rounded-3xl bg-emerald-500/10 text-emerald-400 text-xs font-medium mb-4 tracking-[1px]">
-                <div class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></div>
-                READY FOR AD NETWORKS
+    <main class="shell py-6 sm:py-8">
+        <section class="hero-grid">
+            <div class="panel p-5 sm:p-7 flex flex-col justify-between gap-8">
+                <div>
+                    <div class="inline-flex items-center gap-2 text-xs font-semibold text-sky-200 bg-sky-400/10 border border-sky-300/15 rounded-md px-2.5 py-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-300"></span>
+                        Mobile launches fullscreen
+                    </div>
+                    <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl leading-[.95] mt-5 max-w-3xl">
+                        Test, scan, and share every playable from one clean desk.
+                    </h1>
+                    <p class="text-zinc-400 mt-4 max-w-2xl">
+                        Desktop keeps a framed preview. Phones go straight into the playable file for a cleaner ad-network style experience.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="stat-card p-4">
+                        <div class="text-xs text-zinc-500">Library</div>
+                        <div id="stat-count" class="text-3xl font-bold mt-1">0</div>
+                    </div>
+                    <div class="stat-card p-4">
+                        <div class="text-xs text-zinc-500">Mobile</div>
+                        <div class="text-xl font-bold mt-2 text-emerald-300">Fullscreen</div>
+                    </div>
+                    <div class="stat-card p-4">
+                        <div class="text-xs text-zinc-500">Desktop</div>
+                        <div class="text-xl font-bold mt-2 text-sky-300">Preview</div>
+                    </div>
+                    <div class="stat-card p-4">
+                        <div class="text-xs text-zinc-500">Links</div>
+                        <div class="text-xl font-bold mt-2 text-amber-300">QR + Copy</div>
+                    </div>
+                </div>
             </div>
-            <h1 class="section-header tracking-tighter">Simple. Fast.<br>Ready to scan &amp; play.</h1>
-            <p class="mt-3 text-lg text-zinc-400 max-w-md">
-                Host your HTML5 playables. Generate QR codes automatically. 
-                Perfect mobile fullscreen + desktop testing with orientation switch.
-            </p>
-            
-            <div class="flex items-center gap-x-3 mt-6">
-                <button onclick="document.getElementById('playables-grid').scrollIntoView({ behavior: 'smooth' })" 
-                        class="px-6 py-3 bg-white text-zinc-950 hover:bg-zinc-100 transition-all font-semibold rounded-3xl text-sm flex items-center gap-x-2 shadow-lg shadow-emerald-500/20">
-                    <span>Browse Playables</span>
-                    <i class="fa-solid fa-arrow-down"></i>
+
+            <aside class="panel p-5 flex flex-col justify-between gap-5">
+                <div>
+                    <div class="text-xs uppercase tracking-[.2em] text-zinc-500">Selected</div>
+                    <h2 id="spotlight-title" class="font-display text-3xl leading-none mt-3">Playable</h2>
+                    <p id="spotlight-desc" class="text-sm text-zinc-400 mt-3">Choose a card below to update this quick launcher.</p>
+                </div>
+
+                <div class="flex items-center justify-center py-2">
+                    <div id="spotlight-qr" class="qr-box"></div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <button id="spotlight-open" class="btn btn-primary">
+                        <i class="fa-solid fa-play"></i>
+                        <span>Open</span>
+                    </button>
+                    <button id="spotlight-copy" class="btn">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>Copy</span>
+                    </button>
+                </div>
+            </aside>
+        </section>
+
+        <section class="mt-6 panel p-4">
+            <div class="grid lg:grid-cols-[minmax(220px,1fr)_auto_auto] gap-3 items-center">
+                <label class="relative block">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500"></i>
+                    <input id="search-input" class="field w-full pl-10 pr-3" type="search" placeholder="Search playables">
+                </label>
+
+                <div id="category-filter" class="segmented overflow-x-auto"></div>
+
+                <select id="sort-select" class="field px-3">
+                    <option value="recent">Newest first</option>
+                    <option value="name">Name A-Z</option>
+                    <option value="category">Category</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="mt-6">
+            <div class="flex items-end justify-between gap-4 mb-4">
+                <div>
+                    <h2 class="font-display text-2xl">Playables</h2>
+                    <p id="result-count" class="text-sm text-zinc-500 mt-1">Loading library</p>
+                </div>
+                <button id="reset-filters" class="btn hide-mobile">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span>Reset</span>
                 </button>
-                
-                <a href="#add-new" 
-                   class="px-5 py-3 border border-zinc-700 hover:bg-zinc-900 transition-all font-medium rounded-3xl text-sm flex items-center gap-x-2">
-                    <i class="fa-solid fa-plus"></i>
-                    <span>Add New</span>
-                </a>
             </div>
-        </div>
 
-        <!-- Quick Stats -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
-            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4">
-                <div class="text-emerald-400 text-xs tracking-widest font-mono">HOSTED</div>
-                <div class="text-3xl font-semibold mt-1">10</div>
-                <div class="text-xs text-zinc-500">Playables ready</div>
+            <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4"></div>
+            <div id="empty-state" class="empty-state hidden p-8 text-center">
+                <div class="text-3xl mb-3"><i class="fa-regular fa-folder-open"></i></div>
+                <h3 class="font-semibold">No playables found</h3>
+                <p class="text-sm text-zinc-500 mt-1">Try a different search or category.</p>
             </div>
-            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4">
-                <div class="text-emerald-400 text-xs tracking-widest font-mono">MOBILE FIRST</div>
-                <div class="text-3xl font-semibold mt-1">Fullscreen</div>
-                <div class="text-xs text-zinc-500">Auto-detect + rotate</div>
-            </div>
-            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4">
-                <div class="text-emerald-400 text-xs tracking-widest font-mono">DESKTOP</div>
-                <div class="text-3xl font-semibold mt-1">Fixed + Rotate</div>
-                <div class="text-xs text-zinc-500">Phone frame simulation</div>
-            </div>
-            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-4">
-                <div class="text-emerald-400 text-xs tracking-widest font-mono">QR CODES</div>
-                <div class="text-3xl font-semibold mt-1">Instant</div>
-                <div class="text-xs text-zinc-500">Scan to launch</div>
-            </div>
-        </div>
+        </section>
 
-        <!-- Playables Grid -->
-        <div id="playables-grid">
-            <div class="flex items-end justify-between mb-5">
+        <section id="add-new" class="mt-10 grid lg:grid-cols-[1fr_1fr] gap-4">
+            <div class="help-card p-5">
+                <h2 class="font-display text-2xl">Add A Playable</h2>
+                <div class="mt-5 space-y-4 text-sm text-zinc-300">
+                    <div class="flex gap-3">
+                        <div class="w-7 h-7 rounded-md bg-emerald-400/12 text-emerald-300 grid place-items-center font-bold">1</div>
+                        <div>
+                            <div class="font-semibold">Create a folder in <code class="text-emerald-300">playables/</code></div>
+                            <div class="text-zinc-500">Example: <code>playables/my-new-game/</code></div>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="w-7 h-7 rounded-md bg-sky-400/12 text-sky-300 grid place-items-center font-bold">2</div>
+                        <div>
+                            <div class="font-semibold">Add <code class="text-sky-300">playable.html</code></div>
+                            <div class="text-zinc-500">Keep the playable self-contained inside that folder.</div>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="w-7 h-7 rounded-md bg-amber-400/12 text-amber-300 grid place-items-center font-bold">3</div>
+                        <div>
+                            <div class="font-semibold">Register it in <code class="text-amber-300">playables</code></div>
+                            <div class="text-zinc-500">Add one object to the array at the bottom of this page.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-card p-5">
+                <h2 class="font-display text-2xl">Launch Paths</h2>
+                <div class="mt-5 space-y-3 text-sm">
+                    <div class="p-3 rounded-md bg-black/25 border border-white/5">
+                        <div class="text-zinc-500">Wrapper URL</div>
+                        <code id="wrapper-example" class="block text-emerald-300 mt-1 break-all"></code>
+                    </div>
+                    <div class="p-3 rounded-md bg-black/25 border border-white/5">
+                        <div class="text-zinc-500">Mobile redirect target</div>
+                        <code class="block text-sky-300 mt-1 break-all">playables/&lt;game&gt;/playable.html</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="preview-modal" class="preview-modal" aria-hidden="true">
+        <div class="w-full max-w-[720px]">
+            <div class="mb-3 flex items-center justify-between gap-3">
                 <div>
-                    <h2 class="text-xl font-semibold tracking-tight">Your Playables</h2>
-                    <p class="text-sm text-zinc-500">Click any card or scan the QR code with your phone</p>
+                    <div id="preview-title" class="font-display text-2xl">Preview</div>
+                    <div id="preview-url" class="text-xs text-zinc-500 break-all"></div>
                 </div>
-                <div class="text-xs px-3 py-1 bg-zinc-900 border border-zinc-700 rounded-2xl text-zinc-400 hidden md:block">
-                    <i class="fa-solid fa-sync fa-sm mr-1.5"></i> Auto-updates on refresh
-                </div>
+                <button id="close-preview" class="btn btn-icon" title="Close preview" aria-label="Close preview">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
-
-            <!-- Dynamic Cards injected by JS -->
-            <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                <!-- Populated via JavaScript -->
-            </div>
-        </div>
-
-        <!-- Add New Section -->
-        <div id="add-new" class="mt-14 border border-zinc-800 rounded-3xl p-8 bg-zinc-900/50">
-            <div class="max-w-xl">
-                <h3 class="font-semibold text-lg flex items-center gap-x-2">
-                    <i class="fa-solid fa-folder-plus text-emerald-400"></i> 
-                    Add a new playable
-                </h3>
-                <p class="text-sm text-zinc-400 mt-1">Follow these 3 simple steps to add your own HTML5 playable.</p>
-                
-                <div class="mt-6 space-y-4 text-sm">
-                    <div class="flex gap-4">
-                        <div class="w-6 h-6 rounded-full bg-emerald-500/10 text-emerald-400 flex-shrink-0 flex items-center justify-center text-xs font-mono font-bold">1</div>
-                        <div>
-                            <div class="font-medium">Create folder</div>
-                            <div class="text-zinc-400 text-xs mt-0.5">Create a new folder inside <span class="font-mono text-emerald-400">/playables/</span> (e.g. <span class="font-mono">my-new-game</span>)</div>
-                        </div>
-                    </div>
-                    <div class="flex gap-4">
-                        <div class="w-6 h-6 rounded-full bg-emerald-500/10 text-emerald-400 flex-shrink-0 flex items-center justify-center text-xs font-mono font-bold">2</div>
-                        <div>
-                            <div class="font-medium">Add your game</div>
-                            <div class="text-zinc-400 text-xs mt-0.5">Put your game file as <span class="font-mono text-emerald-400">playable.html</span> inside the new folder</div>
-                        </div>
-                    </div>
-                    <div class="flex gap-4">
-                        <div class="w-6 h-6 rounded-full bg-emerald-500/10 text-emerald-400 flex-shrink-0 flex items-center justify-center text-xs font-mono font-bold">3</div>
-                        <div>
-                            <div class="font-medium">Register it here</div>
-                            <div class="text-zinc-400 text-xs mt-0.5">Add a new object to the <span class="font-mono text-emerald-400">playables</span> array in the script below</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mt-6 text-xs bg-zinc-950 border border-zinc-800 p-3 rounded-2xl text-zinc-400">
-                    <strong class="text-emerald-400">Pro tip:</strong> All playables now use one shared wrapper file. Just add <span class="font-mono">playable.html</span> in each folder.
+            <div class="flex justify-center">
+                <div class="phone-frame">
+                    <iframe id="preview-frame" title="Playable preview"></iframe>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="border-t border-zinc-800 py-8 text-center text-xs text-zinc-500">
-        Made for fast iteration • Works great with Mintegral, AppLovin, Playworks &amp; custom hosting<br>
-        <span class="font-mono text-[10px]">Tip: Host on GitHub Pages, Netlify, or Vercel for instant live URLs + QR codes</span>
-    </footer>
-
-    <!-- Instructions Modal -->
-    <div id="instructions-modal" onclick="hideInstructions()" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-        <div onclick="event.stopImmediatePropagation()" class="bg-zinc-900 border border-zinc-700 max-w-lg w-full rounded-3xl p-7 text-sm">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-semibold text-lg">How to use this showcase</h3>
-                <button onclick="hideInstructions()" class="text-zinc-400 hover:text-white text-xl leading-none">&times;</button>
-            </div>
-            
-            <div class="space-y-5 text-zinc-300">
-                <div>
-                    <div class="font-medium text-emerald-400 mb-1 flex items-center gap-x-2"><i class="fa-solid fa-mobile fa-fw"></i> On Mobile</div>
-                    <ul class="text-xs space-y-1 pl-1 text-zinc-400">
-                        <li>• Open this page on your phone (or scan any QR)</li>
-                        <li>• Tap any playable card → it launches in <strong>fullscreen</strong></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <div class="font-medium text-emerald-400 mb-1 flex items-center gap-x-2"><i class="fa-solid fa-desktop fa-fw"></i> On Desktop</div>
-                    <ul class="text-xs space-y-1 pl-1 text-zinc-400">
-                        <li>• Click "Open Playable" — shows inside a realistic phone frame</li>
-                    </ul>
-                </div>
-                
-                <div class="pt-3 border-t border-zinc-800 text-xs">
-                    <strong>Important:</strong><br>
-                    1. Update <code class="bg-zinc-950 px-1.5 py-0.5 rounded text-emerald-400">BASE_URL</code> at the top.<br>
-                    2. Add new playables in the <code class="bg-zinc-950 px-1.5 py-0.5 rounded text-emerald-400">playables</code> array below.<br>
-                    3. Each playable only needs a <code class="bg-zinc-950 px-1.5 py-0.5 rounded text-emerald-400">playable.html</code> file.
-                </div>
-            </div>
-        </div>
-    </div>
+    <div id="toast" class="fixed left-1/2 bottom-5 -translate-x-1/2 hidden rounded-md border border-white/10 bg-zinc-950 px-4 py-2 text-sm text-white shadow-2xl"></div>
 
     <script>
-        // ==================== CONFIGURATION ====================
-        const BASE_URL = "https://mtouseef123123.github.io/FumbPlayableWebsite/";
-
-        // ==================== PLAYABLES DATA ====================
         const playables = [
             {
                 id: "idle-mine",
                 title: "Idle Bitcoin Miner",
-                desc: "Tap to mine Bitcoin and grow your empire. Simple idle playable demo.",
-                icon: "⛏️",
-                color: "#eab308",
+                desc: "Tap to mine, upgrade fast, and grow a compact idle economy.",
+                icon: "fa-solid fa-hammer",
+                color: "#fbbf24",
                 category: "Idle"
             },
             {
                 id: "Horde-v2",
                 title: "Horde v2",
-                desc: "Tap to mine Bitcoin and grow your empire. Simple idle playable demo.",
-                icon: "⛏️",
-                color: "#eab308",
-                category: "Idle"
+                desc: "A horde survival playable focused on fast enemy pressure.",
+                icon: "fa-solid fa-shield-halved",
+                color: "#fb7185",
+                category: "Action"
             },
             {
                 id: "Horde-v3",
                 title: "Horde v3",
-                desc: "Tap to mine Bitcoin and grow your empire. Simple idle playable demo.",
-                icon: "⛏️",
-                color: "#eab308",
-                category: "Idle"
+                desc: "Updated horde test with stronger pacing and cleaner iteration.",
+                icon: "fa-solid fa-bolt",
+                color: "#38bdf8",
+                category: "Action"
             },
-
             {
                 id: "Idle-MineJS",
-                title: "JS playable",
-                desc: "Tap to mine Bitcoin and grow your empire. Simple idle playable demo.",
-                icon: "⛏️",
-                color: "#eab1008",
-                category: "Idle"
+                title: "Idle Mine JS",
+                desc: "JavaScript version of the mining loop for quick browser testing.",
+                icon: "fa-solid fa-code",
+                color: "#34d399",
+                category: "Prototype"
             }
-        
-        
-        
         ];
 
-        // ==================== RENDER CARDS ====================
-        function renderCards() {
-            const container = document.getElementById('cards-container');
-            container.innerHTML = '';
+        const state = {
+            query: "",
+            category: "All",
+            sort: "recent",
+            selectedId: playables[0]?.id || null
+        };
 
-            playables.forEach(playable => {
-                const cardHTML = `
-                    <div class="playable-card bg-zinc-900 border border-zinc-700 hover:border-zinc-600 rounded-3xl overflow-hidden flex flex-col">
-                        <div class="px-5 pt-5 pb-3 flex items-start justify-between">
-                            <div>
-                                <div class="flex items-center gap-x-3">
-                                    <div class="w-9 h-9 flex-shrink-0 rounded-2xl flex items-center justify-center text-2xl" 
-                                         style="background-color: ${playable.color}20; color: ${playable.color}">
-                                        ${playable.icon}
-                                    </div>
-                                    <div>
-                                        <div class="font-semibold tracking-tight">${playable.title}</div>
-                                        <div class="text-[10px] text-zinc-500 font-mono">${playable.category}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="text-right">
-                                <span class="inline-block text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 font-mono">HTML5</span>
-                            </div>
-                        </div>
+        const siteRoot = new URL("./", window.location.href).href;
+        const wrapperUrl = id => new URL(`playables/?game=${encodeURIComponent(id)}`, siteRoot).href;
+        const directUrl = id => new URL(`playables/${encodeURIComponent(id)}/playable.html`, siteRoot).href;
+        const qrUrl = url => `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(url)}`;
 
-                        <div class="px-5 text-xs text-zinc-400 line-clamp-2 h-[32px]">
-                            ${playable.desc}
-                        </div>
-
-                        <!-- QR Code (Updated for new structure) -->
-                        <div class="px-5 pt-4 pb-2 flex justify-center">
-                            <div class="qr-container">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(BASE_URL + 'playables/?game=' + playable.id)}" 
-                                     alt="QR Code for ${playable.title}"
-                                     class="w-[130px] h-[130px] rounded-xl"
-                                     onerror="this.src='https://placehold.co/130x130/18181b/64748b?text=QR+Error'">
-                            </div>
-                        </div>
-
-                        <!-- Actions -->
-                        <div class="px-5 pb-5 pt-1 mt-auto flex items-center gap-x-2">
-                            <button onclick="openPlayable('${playable.id}')"
-                                    class="flex-1 py-[9px] text-sm font-semibold bg-white hover:bg-zinc-100 active:bg-zinc-200 transition-all text-zinc-950 rounded-2xl flex items-center justify-center gap-x-2 shadow">
-                                <i class="fa-solid fa-play fa-sm"></i>
-                                <span>Open Playable</span>
-                            </button>
-                            
-                            <button onclick="copyLink('${playable.id}', this)"
-                                    class="px-3 py-[9px] text-sm font-medium border border-zinc-600 hover:bg-zinc-800 transition-all rounded-2xl flex items-center justify-center w-11">
-                                <i class="fa-solid fa-link"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += cardHTML;
-            });
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth <= 768;
         }
 
-        // ==================== UPDATED openPlayable ====================
-        function openPlayable(id) {
-            const url = BASE_URL + 'playables/?game=' + id;
-            window.open(url, '_blank');
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.classList.remove("hidden");
+            clearTimeout(showToast.timer);
+            showToast.timer = setTimeout(() => toast.classList.add("hidden"), 1800);
         }
 
-        function copyLink(id, btnElement) {
-            const url = BASE_URL + 'playables/?game=' + id;
-            navigator.clipboard.writeText(url).then(() => {
-                const originalText = btnElement.innerHTML;
-                btnElement.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i>`;
-                setTimeout(() => {
-                    btnElement.innerHTML = originalText;
-                }, 1800);
-            }).catch(() => {
-                prompt("Copy this URL:", url);
-            });
-        }
-
-        function showInstructions() {
-            document.getElementById('instructions-modal').classList.remove('hidden');
-            document.getElementById('instructions-modal').classList.add('flex');
-        }
-
-        function hideInstructions() {
-            const modal = document.getElementById('instructions-modal');
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-        }
-
-        // ==================== INITIALIZE ====================
-        function init() {
-            renderCards();
-            
-            console.log('%c[Playables] Press "?" to show instructions', 'color:#3f3f46');
-            
-            document.addEventListener('keydown', function(e) {
-                if (e.key === '?') {
-                    e.preventDefault();
-                    const modal = document.getElementById('instructions-modal');
-                    if (modal.classList.contains('hidden')) {
-                        showInstructions();
-                    } else {
-                        hideInstructions();
-                    }
-                }
-            });
-            
-            if (BASE_URL.includes('your-playables-site.com')) {
-                setTimeout(() => {
-                    console.warn('%c[IMPORTANT] Please update the BASE_URL variable!', 'color:#f59e0b; font-size: 10px');
-                }, 1200);
+        async function copyText(text, message) {
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast(message);
+            } catch {
+                prompt("Copy this URL:", text);
             }
         }
 
-        window.onload = init;
+        function getFilteredPlayables() {
+            const query = state.query.trim().toLowerCase();
+            let list = playables.filter(playable => {
+                const matchesQuery = !query || [playable.title, playable.desc, playable.category, playable.id].join(" ").toLowerCase().includes(query);
+                const matchesCategory = state.category === "All" || playable.category === state.category;
+                return matchesQuery && matchesCategory;
+            });
+
+            if (state.sort === "name") {
+                list = [...list].sort((a, b) => a.title.localeCompare(b.title));
+            }
+
+            if (state.sort === "category") {
+                list = [...list].sort((a, b) => a.category.localeCompare(b.category) || a.title.localeCompare(b.title));
+            }
+
+            return list;
+        }
+
+        function renderCategories() {
+            const categories = ["All", ...new Set(playables.map(playable => playable.category))];
+            const container = document.getElementById("category-filter");
+            container.innerHTML = categories.map(category => `
+                <button type="button" aria-pressed="${category === state.category}" data-category="${category}">
+                    ${category}
+                </button>
+            `).join("");
+
+            container.querySelectorAll("button").forEach(button => {
+                button.addEventListener("click", () => {
+                    state.category = button.dataset.category;
+                    render();
+                });
+            });
+        }
+
+        function renderCards() {
+            const list = getFilteredPlayables();
+            const container = document.getElementById("cards-container");
+            const emptyState = document.getElementById("empty-state");
+
+            document.getElementById("result-count").textContent = `${list.length} of ${playables.length} playable${playables.length === 1 ? "" : "s"}`;
+            emptyState.classList.toggle("hidden", list.length > 0);
+
+            container.innerHTML = list.map((playable, index) => {
+                const url = wrapperUrl(playable.id);
+                const icon = playable.icon || playable.fallbackIcon || "fa-solid fa-gamepad";
+                return `
+                    <article class="playable-card flex flex-col" style="--card-color: ${playable.color}">
+                        <div class="accent-line"></div>
+                        <div class="p-5 flex-1 flex flex-col">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <div class="w-11 h-11 rounded-md grid place-items-center shrink-0" style="background:${playable.color}18;color:${playable.color}">
+                                        <i class="${icon}"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h3 class="font-semibold truncate">${playable.title}</h3>
+                                        <div class="text-xs text-zinc-500 mt-1">${playable.category} • ${playable.id}</div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-icon select-card" title="Select playable" aria-label="Select ${playable.title}" data-id="${playable.id}">
+                                    <i class="fa-regular fa-star"></i>
+                                </button>
+                            </div>
+
+                            <p class="text-sm text-zinc-400 mt-4 min-h-[42px]">${playable.desc}</p>
+
+                            <div class="mt-5 flex justify-center">
+                                <div class="qr-box">
+                                    <img src="${qrUrl(url)}" alt="QR code for ${playable.title}" loading="${index > 1 ? "lazy" : "eager"}">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-[1fr_40px_40px] gap-2 mt-5">
+                                <button class="btn btn-primary open-playable" data-id="${playable.id}">
+                                    <i class="fa-solid fa-play"></i>
+                                    <span>Open</span>
+                                </button>
+                                <button class="btn btn-icon copy-playable" title="Copy link" aria-label="Copy ${playable.title} link" data-id="${playable.id}">
+                                    <i class="fa-solid fa-copy"></i>
+                                </button>
+                                <button class="btn btn-icon direct-playable" title="Direct file" aria-label="Open ${playable.title} direct file" data-id="${playable.id}">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+
+            container.querySelectorAll(".open-playable").forEach(button => {
+                button.addEventListener("click", () => openPlayable(button.dataset.id));
+            });
+
+            container.querySelectorAll(".copy-playable").forEach(button => {
+                button.addEventListener("click", () => copyText(wrapperUrl(button.dataset.id), "Playable link copied"));
+            });
+
+            container.querySelectorAll(".direct-playable").forEach(button => {
+                button.addEventListener("click", () => window.open(directUrl(button.dataset.id), "_blank"));
+            });
+
+            container.querySelectorAll(".select-card").forEach(button => {
+                button.addEventListener("click", () => {
+                    state.selectedId = button.dataset.id;
+                    renderSpotlight();
+                    showToast("Selected");
+                });
+            });
+        }
+
+        function renderSpotlight() {
+            const playable = playables.find(item => item.id === state.selectedId) || playables[0];
+            if (!playable) return;
+
+            const url = wrapperUrl(playable.id);
+            document.getElementById("spotlight-title").textContent = playable.title;
+            document.getElementById("spotlight-desc").textContent = playable.desc;
+            document.getElementById("spotlight-qr").innerHTML = `<img src="${qrUrl(url)}" alt="QR code for ${playable.title}">`;
+            document.getElementById("spotlight-open").onclick = () => openPlayable(playable.id);
+            document.getElementById("spotlight-copy").onclick = () => copyText(url, "Selected link copied");
+        }
+
+        function openPlayable(id) {
+            if (isMobileDevice()) {
+                window.location.href = wrapperUrl(id);
+                return;
+            }
+
+            const playable = playables.find(item => item.id === id);
+            const modal = document.getElementById("preview-modal");
+            const frame = document.getElementById("preview-frame");
+            const url = wrapperUrl(id);
+
+            document.getElementById("preview-title").textContent = playable?.title || "Preview";
+            document.getElementById("preview-url").textContent = url;
+            frame.src = url;
+            modal.classList.add("is-open");
+            modal.setAttribute("aria-hidden", "false");
+        }
+
+        function closePreview() {
+            const modal = document.getElementById("preview-modal");
+            const frame = document.getElementById("preview-frame");
+            modal.classList.remove("is-open");
+            modal.setAttribute("aria-hidden", "true");
+            frame.src = "about:blank";
+        }
+
+        function render() {
+            renderCategories();
+            renderCards();
+            renderSpotlight();
+        }
+
+        function init() {
+            document.getElementById("stat-count").textContent = playables.length;
+            document.getElementById("wrapper-example").textContent = new URL("playables/?game=<game>", siteRoot).href;
+
+            document.getElementById("search-input").addEventListener("input", event => {
+                state.query = event.target.value;
+                renderCards();
+            });
+
+            document.getElementById("sort-select").addEventListener("change", event => {
+                state.sort = event.target.value;
+                renderCards();
+            });
+
+            document.getElementById("reset-filters").addEventListener("click", () => {
+                state.query = "";
+                state.category = "All";
+                state.sort = "recent";
+                document.getElementById("search-input").value = "";
+                document.getElementById("sort-select").value = "recent";
+                render();
+            });
+
+            document.getElementById("share-site-btn").addEventListener("click", () => copyText(siteRoot, "Site link copied"));
+            document.getElementById("close-preview").addEventListener("click", closePreview);
+            document.getElementById("preview-modal").addEventListener("click", event => {
+                if (event.target.id === "preview-modal") closePreview();
+            });
+            document.addEventListener("keydown", event => {
+                if (event.key === "Escape") closePreview();
+            });
+
+            render();
+        }
+
+        window.addEventListener("load", init);
     </script>
 </body>
 </html>

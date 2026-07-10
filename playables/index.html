@@ -3,162 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Playable Preview .3</title>
+    <title>Playable Preview</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2308090b'/%3E%3Cpath d='M18 38h28a10 10 0 0 0 0-20H18a10 10 0 0 0 0 20Z' fill='%2338bdf8'/%3E%3Ccircle cx='22' cy='28' r='3' fill='%2308090b'/%3E%3Ccircle cx='42' cy='28' r='3' fill='%2308090b'/%3E%3Cpath d='M28 34h8' stroke='%2308090b' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
     <style>
-        body { 
-            margin: 0; 
-            background: #0f0f11; 
-            font-family: system-ui; 
-            color: #e5e7eb; 
-            overflow-x: hidden;
+        :root {
+            --bg: #08090b;
+            --panel: #12151a;
+            --panel-2: #191d24;
+            --line: #2a3039;
+            --text: #f4f7fb;
+            --muted: #96a0ad;
+            --mint: #34d399;
+            --sky: #38bdf8;
         }
 
-        .main-container { 
-            display: flex; 
-            flex-direction: row; 
-            gap: 100px; 
-            padding: 24px 8px; 
-            max-width: 100%; 
-            margin: 0; 
-            align-items: center; 
-            justify-content: center; 
-            min-height: 100vh; 
+        * {
             box-sizing: border-box;
         }
 
-        .qr-sidebar { 
-            width: 220px; 
-            max-width: 220px;
-            flex: 0 0 auto;
-            background: #18181b; 
-            border: 1px solid #27251f; 
-            border-radius: 16px; 
-            padding: 20px; 
-            text-align: center; 
-            flex-shrink: 0; 
+        body {
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 22% 12%, rgba(52, 211, 153, .12), transparent 30rem),
+                radial-gradient(circle at 78% 0%, rgba(56, 189, 248, .1), transparent 28rem),
+                linear-gradient(180deg, #0b0d10, var(--bg));
+            color: var(--text);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
 
-        .qr-sidebar img { 
-            width: 180px; 
-            height: 180px; 
-            border-radius: 12px; 
-            background: white; 
-            padding: 8px; 
-            margin-bottom: 12px; 
+        button,
+        input {
+            font: inherit;
         }
 
-        .playable-wrapper { 
-            flex: 0 0 auto !important; 
-            flex-grow: 0 !important;
-            flex-shrink: 0 !important;
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px minmax(390px, 1fr) 280px;
+            gap: 24px;
+            width: min(1180px, calc(100vw - 32px));
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: 24px 0;
+            align-items: center;
         }
 
-        .device-frame { 
-            padding: 12px; 
-            border-radius: 42px; 
-            background: linear-gradient(145deg, #2b2b31, #111114); 
-            box-shadow: 0 25px 60px rgba(0,0,0,0.55); 
-            width: fit-content; 
+        .side-panel {
+            border: 1px solid rgba(255, 255, 255, .09);
+            border-radius: 8px;
+            background: rgba(18, 21, 26, .86);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .28);
         }
 
-        #game-frame { 
-            width: 360px; 
-            height: 640px; 
-            aspect-ratio: 9 / 16; 
-            border: none; 
-            border-radius: 28px; 
-            background: #000; 
-            display: block; 
+        .qr-sidebar {
+            padding: 18px;
         }
 
-        /* ========== IMPROVED MOBILE ========== */
-        @media (max-width: 900px) {
-            .main-container { 
-                flex-direction: column; 
-                padding: 16px; 
-                gap: 16px; 
-                align-items: center; 
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 24px;
+            padding: 0 8px;
+            border: 1px solid rgba(52, 211, 153, .18);
+            border-radius: 6px;
+            background: rgba(52, 211, 153, .08);
+            color: #a7f3d0;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: var(--mint);
+        }
+
+        h1 {
+            margin: 16px 0 8px;
+            font-size: 30px;
+            line-height: 1;
+            letter-spacing: -.03em;
+        }
+
+        p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .qr-card {
+            display: grid;
+            place-items: center;
+            width: 200px;
+            height: 200px;
+            margin: 20px auto 14px;
+            padding: 10px;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .qr-card img {
+            width: 180px;
+            height: 180px;
+            border-radius: 4px;
+        }
+
+        .actions {
+            display: grid;
+            gap: 8px;
+            margin-top: 18px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 40px;
+            padding: 0 14px;
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 8px;
+            color: var(--text);
+            background: rgba(255, 255, 255, .06);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            border-color: rgba(255, 255, 255, .2);
+            background: rgba(255, 255, 255, .1);
+        }
+
+        .btn-primary {
+            border-color: rgba(255, 255, 255, .9);
+            background: #f8fafc;
+            color: #09090b;
+            font-weight: 800;
+        }
+
+        .playable-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 0;
+        }
+
+        .device-frame {
+            position: relative;
+            width: min(390px, calc(100vw - 48px));
+            padding: 12px;
+            border-radius: 36px;
+            background: linear-gradient(145deg, #313640, #0a0b0e);
+            box-shadow: 0 30px 90px rgba(0, 0, 0, .64);
+        }
+
+        .device-frame::before {
+            content: "";
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            width: 86px;
+            height: 18px;
+            border-radius: 0 0 12px 12px;
+            transform: translateX(-50%);
+            background: #050608;
+            z-index: 2;
+        }
+
+        #game-frame {
+            display: block;
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            border: 0;
+            border-radius: 26px;
+            background: #000;
+        }
+
+        .info-panel {
+            padding: 18px;
+        }
+
+        .info-list {
+            display: grid;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .07);
+            font-size: 13px;
+        }
+
+        .info-item span:first-child {
+            color: var(--muted);
+        }
+
+        .info-item span:last-child {
+            text-align: right;
+            font-weight: 700;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 18px;
+            display: none;
+            padding: 10px 14px;
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 8px;
+            background: #09090b;
+            color: white;
+            transform: translateX(-50%);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, .36);
+            font-size: 14px;
+        }
+
+        .toast.is-visible {
+            display: block;
+        }
+
+        @media (max-width: 980px) {
+            body {
+                background: #000;
             }
 
-            .qr-sidebar { 
-                display: none; 
+            .main-container {
+                display: block;
+                width: 100vw;
+                min-height: 100svh;
+                padding: 0;
             }
 
-            .device-frame { 
-                width: 100%; 
-                max-width: 420px; 
-                padding: 10px; 
-                border-radius: 32px; 
-                margin: 0 auto; 
+            .qr-sidebar,
+            .info-panel {
+                display: none;
             }
 
-            #game-frame { 
-                width: 100%; 
-                height: 100%;           /* Fill the frame fully */
-                aspect-ratio: 9 / 16; 
-                border-radius: 24px; 
-                border: none; 
-                background: #000; 
+            .playable-wrapper,
+            .device-frame {
+                display: block;
+                width: 100vw;
+                height: 100svh;
+                padding: 0;
+                border-radius: 0;
+                background: #000;
+                box-shadow: none;
+            }
+
+            .device-frame::before {
+                display: none;
+            }
+
+            #game-frame {
+                width: 100vw;
+                height: 100svh;
+                aspect-ratio: auto;
+                border-radius: 0;
             }
         }
     </style>
 </head>
 <body>
+    <main class="main-container">
+        <aside class="side-panel qr-sidebar">
+            <div class="eyebrow"><span class="dot"></span> Desktop preview</div>
+            <h1 id="game-title">Playable</h1>
+            <p>Scan the QR code to launch the same playable on a phone. Mobile opens the local file directly.</p>
 
-    <div class="main-container">
-        <!-- QR Sidebar -->
-        <div class="qr-sidebar">
-            <h3>Scan to Play</h3>
-            <img id="qr-image" alt="QR Code">
-            <p style="margin:0; font-size:12px; color:#9ca3af;">Scan to play on mobile</p>
-        </div>
-
-        <!-- Playable -->
-        <div class="playable-wrapper">
-            <div class="device-frame">
-                <iframe id="game-frame" src="" frameborder="0"></iframe>
+            <div class="qr-card">
+                <img id="qr-image" alt="QR Code">
             </div>
-        </div>
-    </div>
+
+            <div class="actions">
+                <button id="copy-link" class="btn btn-primary" type="button">Copy preview link</button>
+                <a id="direct-link" class="btn" href="#">Open direct file</a>
+                <a class="btn" href="../">Back to library</a>
+            </div>
+        </aside>
+
+        <section class="playable-wrapper" aria-label="Playable phone preview">
+            <div class="device-frame">
+                <iframe id="game-frame" src="" title="Playable preview"></iframe>
+            </div>
+        </section>
+
+        <aside class="side-panel info-panel">
+            <div class="eyebrow"><span class="dot"></span> Ready</div>
+            <h1>Launch Check</h1>
+            <p id="status-text">Loading preview wrapper.</p>
+
+            <div class="info-list">
+                <div class="info-item">
+                    <span>Mode</span>
+                    <span id="mode-value">Desktop</span>
+                </div>
+                <div class="info-item">
+                    <span>Frame</span>
+                    <span>9:16</span>
+                </div>
+                <div class="info-item">
+                    <span>Game ID</span>
+                    <span id="game-id-value">-</span>
+                </div>
+                <div class="info-item">
+                    <span>Mobile</span>
+                    <span>Direct file</span>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <div id="toast" class="toast"></div>
 
     <script>
-        function init() {
-            const params = new URLSearchParams(window.location.search);
-            const gameId = params.get('game');
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth <= 768;
+        }
 
-            if (!gameId) {
-                document.body.innerHTML = `<h2 style="text-align:center; padding-top:100px;">Missing ?game= parameter</h2>`;
-                return;
-            }
+        function titleFromId(id) {
+            return id
+                .replace(/[-_]+/g, " ")
+                .replace(/\b\w/g, letter => letter.toUpperCase());
+        }
 
-            const frame = document.getElementById('game-frame');
-            frame.src = `./${gameId}/playable.html`;
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.classList.add("is-visible");
+            clearTimeout(showToast.timer);
+            showToast.timer = setTimeout(() => toast.classList.remove("is-visible"), 1800);
+        }
 
-            // Auto QR
-            const playableUrl = window.location.href;
-            const qrImg = document.getElementById('qr-image');
-            if (qrImg) {
-                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(playableUrl)}`;
-            }
-
-            const isMobile = /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth <= 768;
-            
-            if (isMobile) {
-                // Mobile: Let the game fill the frame better
-                frame.style.border = 'none';
-                frame.style.boxShadow = 'none';
-                
-                // Optional: Try to make iframe fill more aggressively
-                setTimeout(() => {
-                    frame.style.height = 'calc(100vh - 80px)'; // Adjust if needed
-                }, 100);
+        async function copyText(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast("Link copied");
+            } catch {
+                prompt("Copy this URL:", text);
             }
         }
 
-        window.onload = init;
+        function init() {
+            const params = new URLSearchParams(window.location.search);
+            const gameId = params.get("game");
+
+            if (!gameId) {
+                document.body.innerHTML = '<div style="display:grid;place-items:center;min-height:100vh;padding:24px;text-align:center"><div><h1>Missing game parameter</h1><p>Use playables/?game=your-folder-name</p><p><a style="color:#38bdf8" href="../">Back to library</a></p></div></div>';
+                return;
+            }
+
+            const playablePath = `./${gameId}/playable.html`;
+
+            if (isMobileDevice()) {
+                window.location.replace(playablePath);
+                return;
+            }
+
+            const title = titleFromId(gameId);
+            const previewUrl = window.location.href;
+            const directUrl = new URL(playablePath, window.location.href).href;
+
+            document.title = `${title} Preview`;
+            document.getElementById("game-title").textContent = title;
+            document.getElementById("game-id-value").textContent = gameId;
+            document.getElementById("status-text").textContent = "Desktop preview is using the shared wrapper. Phones skip this UI.";
+            document.getElementById("game-frame").src = playablePath;
+            document.getElementById("qr-image").src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(previewUrl)}`;
+            document.getElementById("direct-link").href = directUrl;
+            document.getElementById("copy-link").addEventListener("click", () => copyText(previewUrl));
+        }
+
+        window.addEventListener("load", init);
     </script>
 </body>
 </html>
