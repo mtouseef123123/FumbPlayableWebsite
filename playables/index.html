@@ -398,14 +398,14 @@
                 soundToggle.textContent = soundMuted ? "🔇 Sound off" : "🔊 Sound on";
                 soundToggle.setAttribute("aria-label", soundMuted ? "Unmute playable sound" : "Mute playable sound");
                 soundToggle.setAttribute("aria-pressed", String(soundMuted));
-                frame.contentWindow?.postMessage({ type: "playable-audio-mute", muted: soundMuted }, location.origin === "null" ? "*" : location.origin);
+                frame.contentWindow?.postMessage({ type: "playable-audio-mute", muted: soundMuted }, "*");
             }
             soundToggle.addEventListener("click", () => {
                 soundMuted = !soundMuted;
                 syncSound();
             });
             window.addEventListener("message", event => {
-                if (event.source === frame.contentWindow && (location.origin === "null" || event.origin === location.origin) &&
+                if (event.source === frame.contentWindow &&
                     event.data?.type === "playable-audio-ready") syncSound();
             });
             frame.src = playablePath;
