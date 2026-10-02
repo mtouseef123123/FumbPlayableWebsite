@@ -187,6 +187,21 @@
             padding: 18px;
         }
 
+        .sound-toggle {
+            position: absolute;
+            z-index: 3;
+            top: 24px;
+            right: 24px;
+            min-height: 40px;
+            padding: 0 12px;
+            border: 1px solid rgba(255, 255, 255, .45);
+            border-radius: 8px;
+            background: rgba(8, 9, 11, .86);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
         .info-list {
             display: grid;
             gap: 10px;
@@ -262,6 +277,11 @@
                 display: none;
             }
 
+            .sound-toggle {
+                top: max(16px, env(safe-area-inset-top));
+                right: max(16px, env(safe-area-inset-right));
+            }
+
             #game-frame {
                 width: 100vw;
                 height: 100svh;
@@ -276,7 +296,7 @@
         <aside class="side-panel qr-sidebar">
             <div class="eyebrow"><span class="dot"></span> Desktop preview</div>
             <h1 id="game-title">Playable</h1>
-            <p>Scan the QR code to launch the same playable on a phone. Mobile opens the local file directly.</p>
+            <p>Scan the QR code to launch the same playable on a phone. Mobile opens a full-screen preview with sound control.</p>
 
             <div class="qr-card">
                 <img id="qr-image" alt="QR Code">
@@ -292,6 +312,7 @@
         <section class="playable-wrapper" aria-label="Playable phone preview">
             <div class="device-frame">
                 <iframe id="game-frame" src="" title="Playable preview"></iframe>
+                <button id="sound-toggle" class="sound-toggle" type="button" aria-label="Mute playable sound" aria-pressed="false">🔊 Sound on</button>
             </div>
         </section>
 
@@ -315,7 +336,7 @@
                 </div>
                 <div class="info-item">
                     <span>Mobile</span>
-                    <span>Direct file</span>
+                    <span>Full-screen preview</span>
                 </div>
             </div>
         </aside>
@@ -362,11 +383,6 @@
 
             const playablePath = `./${gameId}/playable.html`;
 
-            if (isMobileDevice()) {
-                window.location.replace(playablePath);
-                return;
-            }
-
             const title = titleFromId(gameId);
             const previewUrl = window.location.href;
             const directUrl = new URL(playablePath, window.location.href).href;
@@ -374,8 +390,25 @@
             document.title = `${title} Preview`;
             document.getElementById("game-title").textContent = title;
             document.getElementById("game-id-value").textContent = gameId;
-            document.getElementById("status-text").textContent = "Desktop preview is using the shared wrapper. Phones skip this UI.";
-            document.getElementById("game-frame").src = playablePath;
+            document.getElementById("status-text").textContent = "Desktop preview is using the shared wrapper. Phones use a full-screen preview.";
+            const frame = document.getElementById("game-frame");
+            const soundToggle = document.getElementById("sound-toggle");
+            let soundMuted = false;
+            function syncSound() {
+                soundToggle.textContent = soundMuted ? "🔇 Sound off" : "🔊 Sound on";
+                soundToggle.setAttribute("aria-label", soundMuted ? "Unmute playable sound" : "Mute playable sound");
+                soundToggle.setAttribute("aria-pressed", String(soundMuted));
+                frame.contentWindow?.postMessage({ type: "playable-audio-mute", muted: soundMuted }, location.origin === "null" ? "*" : location.origin);
+            }
+            soundToggle.addEventListener("click", () => {
+                soundMuted = !soundMuted;
+                syncSound();
+            });
+            window.addEventListener("message", event => {
+                if (event.source === frame.contentWindow && (location.origin === "null" || event.origin === location.origin) &&
+                    event.data?.type === "playable-audio-ready") syncSound();
+            });
+            frame.src = playablePath;
             document.getElementById("qr-image").src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(previewUrl)}`;
             document.getElementById("direct-link").href = directUrl;
             document.getElementById("copy-link").addEventListener("click", () => copyText(previewUrl));
