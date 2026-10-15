@@ -364,7 +364,7 @@
 
             const playablePath = `./${gameId}/playable.html`;
 
-            const title = titleFromId(gameId);
+            const title = gameId === "BOB_DuckVersoin_!" ? gameId : titleFromId(gameId);
             const previewUrl = window.location.href;
             const directUrl = new URL(playablePath, window.location.href).href;
 
